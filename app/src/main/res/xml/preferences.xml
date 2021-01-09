@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+            android:title="@string/whitelist"
+            >
+            <EditTextPreference
+                    android:dialogTitle="@string/phoneNumber"
+                    android:dialogMessage="@string/phoneNumberPrompt"
+                    >
+            </EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/various"
+            >
+        <SwitchPreference
+                android:title="@string/enableButton"
+                android:defaultValue="false"
+                android:persistent="true"
+                android:key="enabled"
+                >
+
+        </SwitchPreference>
+    </PreferenceCategory>
+</PreferenceScreen>
