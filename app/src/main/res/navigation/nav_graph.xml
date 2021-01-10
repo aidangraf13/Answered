@@ -3,26 +3,19 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/FirstFragment">
-
+            app:startDestination="@id/mainActivity">
+    <activity
+            android:id="@+id/mainActivity"
+            android:name="com.example.answered.MainActivity"
+            android:label="activity_main"
+            tools:layout="@layout/activity_main"/>
     <fragment
-            android:id="@+id/FirstFragment"
-            android:name="com.example.answered.FirstFragment"
-            android:label="@string/first_fragment_label"
-            tools:layout="@layout/fragment_first">
-
+            android:id="@+id/settingsFragment"
+            android:name="com.example.answered.SettingsFragment"
+            android:label="SettingsFragment">
         <action
-                android:id="@+id/action_FirstFragment_to_SecondFragment"
-                app:destination="@id/SecondFragment"/>
-    </fragment>
-    <fragment
-            android:id="@+id/SecondFragment"
-            android:name="com.example.answered.SecondFragment"
-            android:label="@string/second_fragment_label"
-            tools:layout="@layout/fragment_second">
-
-        <action
-                android:id="@+id/action_SecondFragment_to_FirstFragment"
-                app:destination="@id/FirstFragment"/>
+                android:id="@+id/action_settingsFragment_pop"
+                app:popUpTo="@id/settingsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

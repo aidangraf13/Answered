@@ -15,6 +15,7 @@ public class CallService extends Service {
 
     public final static String CHANNEL_ID = "serviceID";
     public final static int NOTIFICATION_ID = 3;
+    private static final String TAG = "CallService";
     public boolean serviceOn;
     private NotificationManagerCompat managerCompat;
     private Notification notification;
@@ -29,7 +30,7 @@ public class CallService extends Service {
             createChannel();
         }
         // Needs to create notification now for a foreground service
-        Log.i("CallService", "onCreate called as well as createChannel");
+        Log.i(TAG, "onCreate called as well as createChannel");
         createNotification();
         startForeground(NOTIFICATION_ID, notification);
     }
@@ -85,11 +86,11 @@ public class CallService extends Service {
         }
         if (intent.getAction() == null || intent.getAction().equals(MainActivity.START_SERVICE)) {
             createNotification();
-            Log.i("CallService", "Start service");
+            Log.i(TAG, "Start service");
         } else if (intent.getAction().equals(MainActivity.STOP_SERVICE)) {
             managerCompat.cancel(NOTIFICATION_ID);
             stopForeground(true);
-            Log.i("CallService", "Start service");
+            Log.i(TAG, "Start service");
 
             return START_NOT_STICKY;
         }
