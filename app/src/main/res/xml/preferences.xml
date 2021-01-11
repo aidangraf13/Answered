@@ -7,6 +7,8 @@
             <EditTextPreference
                     android:dialogTitle="@string/phoneNumber"
                     android:dialogMessage="@string/phoneNumberPrompt"
+                    android:title="@string/phoneNumber"
+                    android:key="@string/phoneKey"
                     >
             </EditTextPreference>
     </PreferenceCategory>
@@ -17,7 +19,7 @@
                 android:title="@string/enableButton"
                 android:defaultValue="false"
                 android:persistent="true"
-                android:key="enabled"
+                android:key="@string/enabled"
                 >
 
         </SwitchPreference>

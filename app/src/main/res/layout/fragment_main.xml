@@ -10,16 +10,4 @@
             android:layout_height="match_parent"
             android:text="@string/welcomeMessage"
             android:id="@+id/welcomeMessage"/>
-
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_gravity="bottom|right"
-            android:id="@+id/enableService"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="40dp"
-            android:text="@string/enableButton"
-            android:focusable="true"/>
-
 </FrameLayout>

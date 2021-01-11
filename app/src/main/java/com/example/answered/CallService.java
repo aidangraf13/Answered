@@ -23,7 +23,6 @@ public class CallService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
-        super.onCreate();
         managerCompat = NotificationManagerCompat.from(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // create custom foreground notification channel
@@ -32,7 +31,6 @@ public class CallService extends Service {
         // Needs to create notification now for a foreground service
         Log.i(TAG, "onCreate called as well as createChannel");
         createNotification();
-        startForeground(NOTIFICATION_ID, notification);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,7 +75,6 @@ public class CallService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
         // For devices older than O
         Log.i("CallService", "onStartCommand called");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -87,10 +84,11 @@ public class CallService extends Service {
         if (intent.getAction() == null || intent.getAction().equals(MainActivity.START_SERVICE)) {
             createNotification();
             Log.i(TAG, "Start service");
-        } else if (intent.getAction().equals(MainActivity.STOP_SERVICE)) {
+        } else if (intent.getAction().equals(MainActivity.STOP_SERVICE)){
+            Log.i(TAG, String.valueOf(intent.getAction()));
             managerCompat.cancel(NOTIFICATION_ID);
             stopForeground(true);
-            Log.i(TAG, "Start service");
+            Log.i(TAG, "Stop service");
 
             return START_NOT_STICKY;
         }

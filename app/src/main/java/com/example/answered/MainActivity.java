@@ -1,22 +1,35 @@
 package com.example.answered;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     private boolean enabledService;
     static final String START_SERVICE = "Start Service Intent";
     static final String STOP_SERVICE = "Stop Service Intent";
+
     private static final String TAG = "Main";
+    AppBarConfiguration appBarConfiguration;
+    Toolbar toolbar;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,39 +37,85 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Sets up toolbar to access settings
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
 
-        enabledService = false;
+        // Sets up toolbar with navHost
+        NavHostFragment navHostFragment = (NavHostFragment)
+                getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        // checks permissions
-        try {
-            if (!(Permissions.check(this.getApplicationContext()))) {
-                Permissions.request(this);
-            }
-        } catch (Exception e) {
-            // TODO Add appropriate error handling
-            Log.i(TAG, e.getMessage());
-        }
+        // Sets night mode to system default
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
-    }
-
-    protected boolean enabledService (Button enabled) {
-        enabledService = !enabledService;
-        final Intent startServiceIntent = new Intent(this, CallService.class);
+        // Sets up service intents
+        final Intent startServiceIntent = new Intent(getApplicationContext(), CallService.class);
         startServiceIntent.setAction(START_SERVICE);
-        final Intent stopServiceIntent = new Intent(this, CallService.class);
+        final Intent stopServiceIntent = new Intent(getApplicationContext(), CallService.class);
         startServiceIntent.setAction(STOP_SERVICE);
 
-        // starts foreground service
-        if (enabledService) {
-            ContextCompat.startForegroundService(MainActivity.this, startServiceIntent);
-            enabled.setText("Disable");
+        // Sets up shared preference if the service is enabled
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (preferences.contains(getString(R.string.enabledKey))) {
+            // defValue unused as we are certain there exists the preference
+            enabledService = preferences.getBoolean(getString(R.string.enabledKey), false);
         } else {
-            ContextCompat.startForegroundService(MainActivity.this, stopServiceIntent);
-            enabled.setText("Enable");
+            // Adds preference if the enabled service setting hasn't been added
+            Log.i(TAG, "Service preference added");
+            preferences.edit().putBoolean(getString(R.string.enabledKey), false).commit();
+            enabledService = false;
         }
-        return true;
+
+        // Changes FAB to reflect if service is enabled
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        if (enabledService) {
+            fab.setImageDrawable(getDrawable(R.drawable.ic_clear));
+        } else {
+            fab.setImageDrawable(getDrawable(R.drawable.ic_done));
+
+            // checks permissions
+            try {
+                if (!(Permissions.check(this.getApplicationContext()))) {
+                    Permissions.request(this);
+                }
+            } catch (Exception e) {
+                // TODO Add appropriate error handling
+                Log.i(TAG, e.getMessage());
+            }
+
+            // Changes button to enable service
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    enabledService = preferences.getBoolean(getString(R.string.enabledKey), false);
+                    Log.i(TAG, "Service enabled is " + enabledService);
+
+                    // starts foreground service
+                    if (enabledService) {
+                        ContextCompat.startForegroundService(MainActivity.this, stopServiceIntent);
+                        fab.setImageDrawable(getDrawable(R.drawable.ic_done));
+                        preferences.edit().putBoolean(getString(R.string.enabledKey), false).commit();
+                    } else {
+                        ContextCompat.startForegroundService(MainActivity.this, startServiceIntent);
+                        fab.setImageDrawable(getDrawable(R.drawable.ic_clear));
+                        preferences.edit().putBoolean(getString(R.string.enabledKey), true).commit();
+                    }
+                }
+            });
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        // Adds options menu back
+        invalidateOptionsMenu();
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     @Override
@@ -69,13 +128,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_settings:
-                // TODO replace start activity with fragment to fix bug?
-
-//                NavHostFragment.findNavController(FirstFragment.this)
-//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-                startActivity(new Intent(this, SettingsActivity.class));
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.main_to_settings);
+                toolbar.getMenu().clear();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
