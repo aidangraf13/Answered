@@ -10,16 +10,21 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+/**
+ * This class implements the call service that runs in the foreground of the device. It creates
+ * a persistent notification.
+ */
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class CallService extends Service {
 
     public final static String CHANNEL_ID = "serviceID";
     public final static int NOTIFICATION_ID = 3;
     private static final String TAG = "CallService";
-    public boolean serviceOn;
     private NotificationManagerCompat managerCompat;
-    private Notification notification;
 
+    /**
+     * Adds the notification channel to the notification manager.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
@@ -29,10 +34,12 @@ public class CallService extends Service {
             createChannel();
         }
         // Needs to create notification now for a foreground service
-        Log.i(TAG, "onCreate called as well as createChannel");
         createNotification();
     }
 
+    /**
+     * Creates the notification and starts it in the foreground.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotification() {
 //        Intent intent = new Intent(this, AnotherActivity.class);
@@ -56,10 +63,13 @@ public class CallService extends Service {
 //        // Adding action to notification builder
 //        builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.stopService), pendingIntent);
         // Launch notification
-        notification = builder.build();
+        Notification notification = builder.build();
         startForeground(NOTIFICATION_ID, notification);
     }
 
+    /**
+     * Creates a notification channel for the persistent notification.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createChannel() {
         String name = getString(R.string.channelName);
@@ -72,6 +82,16 @@ public class CallService extends Service {
         notificationManager.createNotificationChannel(channel);
     }
 
+    /**
+     * Called every time the service is started, which starts the notification and cancels it with
+     * the correct intent.
+     *
+     * @param intent  Used to determine if the service needs to be stopped or started
+     * @param flags   unused
+     * @param startId unused
+     * @return Sticky if the notification needs to persist, and not sticky if the notification is
+     * going to be destroyed
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -84,7 +104,7 @@ public class CallService extends Service {
         if (intent.getAction() == null || intent.getAction().equals(MainActivity.START_SERVICE)) {
             createNotification();
             Log.i(TAG, "Start service");
-        } else if (intent.getAction().equals(MainActivity.STOP_SERVICE)){
+        } else if (intent.getAction().equals(MainActivity.STOP_SERVICE)) {
             Log.i(TAG, String.valueOf(intent.getAction()));
             managerCompat.cancel(NOTIFICATION_ID);
             stopForeground(true);
@@ -95,6 +115,11 @@ public class CallService extends Service {
         return START_STICKY;
     }
 
+    /**
+     * Unused, but needed to create the service.
+     * @param intent unused
+     * @return null
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

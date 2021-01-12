@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -21,16 +19,25 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * Main activity of the app; starts the toolbar, nav host, services, and provides a button.
+ */
 public class MainActivity extends AppCompatActivity {
     private boolean enabledService;
     static final String START_SERVICE = "Start Service Intent";
     static final String STOP_SERVICE = "Stop Service Intent";
-
     private static final String TAG = "Main";
+
     AppBarConfiguration appBarConfiguration;
     Toolbar toolbar;
     SharedPreferences preferences;
 
+    /**
+     * Called when the app is opened and does a majority of the work setting up UI.
+     * TODO: Move UI generation off the main thread to improve performance
+     *
+     * @param savedInstanceState used to set the view
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         // Sets up toolbar to access settings
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
 
         // Sets up toolbar with navHost
         NavHostFragment navHostFragment = (NavHostFragment)
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         final Intent startServiceIntent = new Intent(getApplicationContext(), CallService.class);
         startServiceIntent.setAction(START_SERVICE);
         final Intent stopServiceIntent = new Intent(getApplicationContext(), CallService.class);
-        startServiceIntent.setAction(STOP_SERVICE);
+        stopServiceIntent.setAction(STOP_SERVICE);
 
         // Sets up shared preference if the service is enabled
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -88,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
 
             // Changes button to enable service
             fab.setOnClickListener(new View.OnClickListener() {
+                /**
+                 * Enables or disables the service, and changes the UI and settings accordingly.
+                 *
+                 * @param v unused
+                 */
                 @Override
                 public void onClick(View v) {
                     enabledService = preferences.getBoolean(getString(R.string.enabledKey), false);
@@ -109,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Overrides the navigate up button on the settings to give control to the nav host.
+     *
+     * @return true if the config was successful, false otherwise
+     */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -118,6 +134,12 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * Creates the options menu to access settings.
+     *
+     * @param menu the menu that contains the layout for the options
+     * @return true always
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -125,14 +147,21 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method runs when an option is selected and acts appropriately.
+     *
+     * @param item the item selected on the menu
+     * @return true if menu needs to be consumed, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.main_to_settings);
+                Navigation.findNavController(
+                        findViewById(R.id.nav_host_fragment)).navigate(R.id.main_to_settings);
                 toolbar.getMenu().clear();
-                return true;
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -11,6 +11,10 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to check and ask for required permissions by the app. One must call
+ * check to add required permissions to check before calling request.
+ */
 public class Permissions {
     private static final ArrayList<String> listPermissionsNeeded;
     private static final int REQUEST_CODE_CALL = 42;
@@ -19,6 +23,12 @@ public class Permissions {
         listPermissionsNeeded = new ArrayList<>();
     }
 
+    /**
+     * This method checks if the app has the necessary permissions.
+     *
+     * @param context the application's context
+     * @return true if no permissions are needed, false otherwise
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static boolean check(Context context) {
         int readPhoneState = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
@@ -40,6 +50,11 @@ public class Permissions {
         return listPermissionsNeeded.isEmpty();
     }
 
+    /**
+     * Requests the permissions needed that are listed by check().
+     *
+     * @param activity requests permissions in this activity
+     */
     public static void request(Activity activity) {
         if (listPermissionsNeeded != null && !listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(activity,
