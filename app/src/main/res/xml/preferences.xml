@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+        >
     <PreferenceCategory
             android:title="@string/whitelist"
             >
+            <SwitchPreference
+                android:title="Answer all calls"
+                android:defaultValue="false"
+                android:persistent="true"
+                android:key="@string/answerAll"
+                android:icon="@drawable/ic_all_inclusive_24px"
+                />
+
             <EditTextPreference
                     android:dialogTitle="@string/phoneNumber"
                     android:dialogMessage="@string/phoneNumberPrompt"

@@ -22,9 +22,6 @@ import androidx.preference.PreferenceManager;
 public class CallReceiver extends BroadcastReceiver {
     private static final String TAG = "CallReceiver";
     private static final String DEFAULT = "default";
-    // Can't access the string resource in the receiver, so we use a constant
-    private static final String PHONE_KEY = "phoneKey";
-    private static final String DELAY_KEY = "delayKey";
     String incomingNumber;
 
     /**
@@ -55,25 +52,41 @@ public class CallReceiver extends BroadcastReceiver {
                 Log.v(TAG, e.getMessage());
             }
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String wantedNumber = preferences.getString(PHONE_KEY, DEFAULT);
-            Log.i(TAG, "Incoming number: " + incomingNumber);
-            Log.i(TAG, "Wanted number: " + wantedNumber);
-            if (!(wantedNumber.equals(DEFAULT)) && wantedNumber.equals(incomingNumber)) {
+            if (incomingNumber != null && preferences.getBoolean(context.getString(R.string.answerAll), false)) {
                 // Adds delay to call
-                String delay = preferences.getString(DELAY_KEY, DEFAULT);
-                if (!(delay.equals(DEFAULT))) {
-                    int delayVal = Integer.parseInt(delay);
-                    try {
-                        Log.i(TAG, "Adding delay to call: " + delayVal);
-                        Thread.sleep((delayVal * 1000L));
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                }
+                addDelay(context);
                 // TODO find replacement for deprecated method
                 telecomManager.acceptRingingCall();
+            } else {
+                String wantedNumber = preferences.getString(context.getString(R.string.phoneKey), DEFAULT);
+                Log.i(TAG, "Incoming number: " + incomingNumber);
+                Log.i(TAG, "Wanted number: " + wantedNumber);
+                if (!(wantedNumber.equals(DEFAULT)) && wantedNumber.equals(incomingNumber)) {
+                    // Adds delay to call
+                    addDelay(context);
+                    // TODO find replacement for deprecated method
+                    telecomManager.acceptRingingCall();
+                }
             }
 
+        }
+    }
+
+    /**
+     * This method when called adds delay depending on the user preference
+     * @param context used to get the preference reference and string resources
+     */
+    private void addDelay(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String delay = preferences.getString(context.getString(R.string.delayKey), DEFAULT);
+        if (!(delay.equals(DEFAULT))) {
+            int delayVal = Integer.parseInt(delay);
+            try {
+                Log.i(TAG, "Adding delay to call: " + delayVal);
+                Thread.sleep((delayVal * 1000L));
+            } catch (InterruptedException e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
 }

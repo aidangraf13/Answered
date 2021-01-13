@@ -11,42 +11,22 @@
     <string name="notificationDescription">Answered! is running in the background.</string>
     <string name="stopService">Stop</string>
     <string name="whitelist">Whitelist</string>
-    <string name="phoneNumber">Phone Number</string>
+    <string name="phoneNumber">Phone number</string>
     <string name="phoneNumberPrompt">Enter a phone number to answer.</string>
     <string name="various">Various</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="settingsTitle">Settings</string>
     <string name="answerError">Call wasn\'t able to be answered. Please check Answered! permissions.</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_main2">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="action_settings">Settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="phoneKey">phoneKey</string>
     <string name="notSet">Not Set</string>
     <string name="enabled">enabled</string>
     <string name="enabledKey">enabledKey</string>
-    <string name="answerDelay">Answer Delay</string>
+    <string name="answerDelay">Answer delay</string>
     <string name="delayKey">delayKey</string>
+    <string name="answerAll">answerAll</string>
 </resources>

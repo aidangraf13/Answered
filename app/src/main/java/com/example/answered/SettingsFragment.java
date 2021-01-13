@@ -1,5 +1,6 @@
 package com.example.answered;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
     private static final String TAG = "SettingsFragment";
+    private SharedPreferences.OnSharedPreferenceChangeListener PreferenceListener;
 
     /**
      * Called when preferences are created.
