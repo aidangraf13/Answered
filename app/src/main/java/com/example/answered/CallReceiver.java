@@ -65,7 +65,7 @@ public class CallReceiver extends BroadcastReceiver {
                     int delayVal = Integer.parseInt(delay);
                     try {
                         Log.i(TAG, "Adding delay to call: " + delayVal);
-                        Thread.sleep((long) (delayVal * 1000));
+                        Thread.sleep((delayVal * 1000L));
                     } catch (InterruptedException e) {
                         Log.e(TAG, e.getMessage());
                     }
