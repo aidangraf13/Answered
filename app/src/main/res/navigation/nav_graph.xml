@@ -11,9 +11,7 @@
             tools:layout="@layout/fragment_main">
         <action
                 android:id="@+id/main_to_settings"
-                app:destination="@id/settingsFragment"
-                app:enterAnim="@android:anim/slide_out_right"
-                app:exitAnim="@anim/nav_default_exit_anim"/>
+                app:destination="@id/settingsFragment"/>
     </fragment>
     <fragment
             android:id="@+id/settingsFragment"

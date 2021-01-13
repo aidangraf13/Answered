@@ -47,4 +47,6 @@
     <string name="notSet">Not Set</string>
     <string name="enabled">enabled</string>
     <string name="enabledKey">enabledKey</string>
+    <string name="answerDelay">Answer Delay</string>
+    <string name="delayKey">delayKey</string>
 </resources>

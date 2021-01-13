@@ -23,7 +23,8 @@ public class CallReceiver extends BroadcastReceiver {
     private static final String TAG = "CallReceiver";
     private static final String DEFAULT = "default";
     // Can't access the string resource in the receiver, so we use a constant
-    private static final String KEY = "phoneKey";
+    private static final String PHONE_KEY = "phoneKey";
+    private static final String DELAY_KEY = "delayKey";
     String incomingNumber;
 
     /**
@@ -54,10 +55,21 @@ public class CallReceiver extends BroadcastReceiver {
                 Log.v(TAG, e.getMessage());
             }
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String wantedNumber = preferences.getString(KEY, DEFAULT);
+            String wantedNumber = preferences.getString(PHONE_KEY, DEFAULT);
             Log.i(TAG, "Incoming number: " + incomingNumber);
             Log.i(TAG, "Wanted number: " + wantedNumber);
             if (!(wantedNumber.equals(DEFAULT)) && wantedNumber.equals(incomingNumber)) {
+                // Adds delay to call
+                String delay = preferences.getString(DELAY_KEY, DEFAULT);
+                if (!(delay.equals(DEFAULT))) {
+                    int delayVal = Integer.parseInt(delay);
+                    try {
+                        Log.i(TAG, "Adding delay to call: " + delayVal);
+                        Thread.sleep((long) (delayVal * 1000));
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
                 // TODO find replacement for deprecated method
                 telecomManager.acceptRingingCall();
             }

@@ -9,19 +9,21 @@
                     android:dialogMessage="@string/phoneNumberPrompt"
                     android:title="@string/phoneNumber"
                     android:key="@string/phoneKey"
+                    android:icon="@drawable/ic_call_24px"
                     >
             </EditTextPreference>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/various"
             >
-        <SwitchPreference
-                android:title="@string/enableButton"
-                android:defaultValue="false"
-                android:persistent="true"
-                android:key="@string/enabled"
-                >
+        <ListPreference
+                android:title="@string/answerDelay"
+                android:entries="@array/delayEntries"
+                android:entryValues="@array/delayValues"
+                android:defaultValue="0"
+                android:key="@string/delayKey"
+                android:icon="@drawable/ic_timer_24px"
+                />
 
-        </SwitchPreference>
     </PreferenceCategory>
 </PreferenceScreen>
